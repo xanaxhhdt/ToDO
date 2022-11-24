@@ -91,12 +91,13 @@ h6 {
   font-weight: 400;
 }
 
-html, body {
+html,
+body {
   min-height: 100vh;
 }
 
 body {
-  background-color: #E4E5E7;
+  background-color: #e4e5e7;
   padding-top: 30px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -108,6 +109,10 @@ body {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .aside {
@@ -130,12 +135,12 @@ body {
 }
 
 .gray {
-  color: #BDBDBD;
+  color: #bdbdbd;
 }
 
 .task-title--done {
   text-decoration: line-through;
-  color: #CDCDCD;
+  color: #cdcdcd;
 }
 
 .task-item__buttons {
@@ -177,7 +182,7 @@ body {
 }
 
 .empty-list__icon {
-  color: #42BE2A;
+  color: #42be2a;
   font-size: 32px;
 }
 
@@ -201,14 +206,12 @@ body {
       -ms-flex-align: center;
           align-items: center;
 }
-
+.btn-action img {
+  pointer-events: none;
+}
 .btn-action:hover {
   background-color: #e0e5ea;
   opacity: 1;
-}
-
-.btn-action img {
-  pointer-events: none;
 }
 
 .none {

@@ -6,10 +6,16 @@ const taskInput = document.querySelector('#taskInput');
 const tasksList = document.querySelector('#tasksList');
 const emptyList = document.querySelector('#emptyList');
 
-// handler ToDo
+// handler ToDo add
 form.addEventListener('submit', addTask);
 
-// func ToDo
+// handler Todo delete
+tasksList.addEventListener('click', deleteTask);
+
+// handler ToDo done
+tasksList.addEventListener('click', doneTask);
+
+// func ToDo Add
 function addTask(event) {
     event.preventDefault();
 
@@ -34,7 +40,38 @@ function addTask(event) {
     taskInput.value = '';
     taskInput.focus();
 
-    if (tasksList.children.length > 1) {
-        emptyList.classList.add('none');
+    checkEmpty();
+}
+
+// func ToDo delete
+function deleteTask(event) {
+    let target = event.target;
+
+    if (target.dataset.action === 'delete') {
+        target.closest('.list-group-item').remove();
+    }
+
+    checkEmpty();
+}
+
+// func ToDo done
+function doneTask(event) {
+    let target = event.target;
+
+    if (target.dataset.action === 'done') {
+        const parentNode = target.closest('.list-group-item');
+        const taskTitle = parentNode.querySelector('.task-title');
+        taskTitle.classList.toggle('task-title--done');
     }
 }
+
+// func examination delete tasks
+function checkEmpty() {
+    if (tasksList.children.length > 1) {
+        emptyList.classList.add('none');
+    } else {
+        emptyList.classList.remove('none');
+    }
+}
+
+
