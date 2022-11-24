@@ -6,6 +6,9 @@ const taskInput = document.querySelector('#taskInput');
 const tasksList = document.querySelector('#tasksList');
 const emptyList = document.querySelector('#emptyList');
 
+// array date tasks
+const tasks = [];
+
 // handler ToDo add
 form.addEventListener('submit', addTask);
 
@@ -15,15 +18,27 @@ tasksList.addEventListener('click', deleteTask);
 // handler ToDo done
 tasksList.addEventListener('click', doneTask);
 
+
 // func ToDo Add
 function addTask(event) {
     event.preventDefault();
 
     const taskText = taskInput.value;
 
+    // add tasks to array
+    const newTask = {
+        id: Date.now(),
+        text: taskText,
+        done: false,
+    };
+    tasks.push(newTask);
+
+    // css Class
+    const cssClass = newTask.done ? "task-title task-title--done" : "task-title";
+
     const taskHTML = `
-        <li class="list-group-item d-flex justify-content-between task-item">
-            <span class="task-title">${taskText}</span>
+        <li id='${newTask.id}' class="list-group-item d-flex justify-content-between task-item">
+            <span class="${cssClass}">${newTask.text}</span>
             <div class="task-item__buttons">
                 <button type="button" data-action="done" class="btn-action">
                     <img src="./img/tick.svg" alt="Done" width="18" height="18">
@@ -48,7 +63,15 @@ function deleteTask(event) {
     let target = event.target;
 
     if (target.dataset.action === 'delete') {
-        target.closest('.list-group-item').remove();
+        const parentNode = target.closest('.list-group-item');
+
+        // find index array
+        const id = Number(parentNode.id);
+        const index = tasks.findIndex((item) => item.id === id);
+        // delete Array
+        tasks.splice(index, 1);
+
+        parentNode.remove();
     }
 
     checkEmpty();
@@ -73,5 +96,3 @@ function checkEmpty() {
         emptyList.classList.remove('none');
     }
 }
-
-
