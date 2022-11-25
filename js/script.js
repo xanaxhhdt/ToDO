@@ -71,6 +71,8 @@ function deleteTask(event) {
         // delete Array
         tasks.splice(index, 1);
 
+        console.log(tasks);
+
         parentNode.remove();
     }
 
@@ -83,6 +85,13 @@ function doneTask(event) {
 
     if (target.dataset.action === 'done') {
         const parentNode = target.closest('.list-group-item');
+
+        // array find done
+        const id = Number(parentNode.id);
+        const task = tasks.find(item => item.id === id);
+        task.done = !task.done;
+
+
         const taskTitle = parentNode.querySelector('.task-title');
         taskTitle.classList.toggle('task-title--done');
     }
