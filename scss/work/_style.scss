@@ -46,11 +46,16 @@ body {
     align-items: center;
     padding-top: 1em;
     padding-bottom: 1em;
+
+    img {
+        pointer-events: none;
+    }
 }
 .empty-list__title {
     font-size: 28px;
     margin-bottom: 15px;
     font-weight: 300;
+    pointer-events: none;
 }
 .empty-list__icon {
     color: #42be2a;

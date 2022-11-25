@@ -7,17 +7,23 @@ const tasksList = document.querySelector('#tasksList');
 const emptyList = document.querySelector('#emptyList');
 
 // array date tasks
-const tasks = [];
+let tasks = [];
+
+// localStorage check
+if (localStorage.getItem('tasks')) {
+    tasks = JSON.parse(localStorage.getItem('tasks'));
+    // render Array
+    tasks.forEach(item => renderArray(item));
+}
+
+checkEmptyList()
 
 // handler ToDo add
 form.addEventListener('submit', addTask);
-
-// handler Todo delete
-tasksList.addEventListener('click', deleteTask);
-
 // handler ToDo done
 tasksList.addEventListener('click', doneTask);
-
+// handler Todo delete
+tasksList.addEventListener('click', deleteTask);
 
 // func ToDo Add
 function addTask(event) {
@@ -33,34 +39,23 @@ function addTask(event) {
     };
     tasks.push(newTask);
 
-    // css Class
-    const cssClass = newTask.done ? "task-title task-title--done" : "task-title";
-
-    const taskHTML = `
-        <li id='${newTask.id}' class="list-group-item d-flex justify-content-between task-item">
-            <span class="${cssClass}">${newTask.text}</span>
-            <div class="task-item__buttons">
-                <button type="button" data-action="done" class="btn-action">
-                    <img src="./img/tick.svg" alt="Done" width="18" height="18">
-                </button>
-                <button type="button" data-action="delete" class="btn-action">
-                    <img src="./img/cross.svg" alt="Done" width="18" height="18">
-                </button>
-            </div>
-        </li>
-    `;
-
-    tasksList.insertAdjacentHTML('beforeend', taskHTML);
+    // render Task
+    renderArray(newTask);
 
     taskInput.value = '';
     taskInput.focus();
 
-    checkEmpty();
+    checkEmptyList();
+    saveToLocalStorage();
 }
 
 // func ToDo delete
 function deleteTask(event) {
     let target = event.target;
+
+    if (target.id === 'emptyList') {
+        target.stopPropagation();
+    }
 
     if (target.dataset.action === 'delete') {
         const parentNode = target.closest('.list-group-item');
@@ -71,12 +66,11 @@ function deleteTask(event) {
         // delete Array
         tasks.splice(index, 1);
 
-        console.log(tasks);
-
         parentNode.remove();
     }
 
-    checkEmpty();
+    checkEmptyList();
+    saveToLocalStorage();
 }
 
 // func ToDo done
@@ -91,17 +85,51 @@ function doneTask(event) {
         const task = tasks.find(item => item.id === id);
         task.done = !task.done;
 
-
         const taskTitle = parentNode.querySelector('.task-title');
         taskTitle.classList.toggle('task-title--done');
     }
+
+    saveToLocalStorage();
 }
 
 // func examination delete tasks
-function checkEmpty() {
-    if (tasksList.children.length > 1) {
-        emptyList.classList.add('none');
+function checkEmptyList() {
+    if (tasks.length === 0) {
+        const emptyListHTML = `
+            <li id="emptyList" class="list-group-item empty-list">
+                <img src="./img/leaf.svg" alt="Empty" width="48" class="mt-3">
+                <div class="empty-list__title">Список дел пуст</div>
+            </li>
+        `;
+        tasksList.insertAdjacentHTML('afterbegin', emptyListHTML);
     } else {
-        emptyList.classList.remove('none');
+        const emptyListEl = document.querySelector('#emptyList');
+        emptyListEl ? emptyListEl.remove() : null;
     }
+}
+
+// save to localStorage
+function saveToLocalStorage() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// func render Task
+function renderArray(tasks) {
+    const cssClass = tasks.done ? "task-title task-title--done" : "task-title";
+
+    const taskHTML = `
+        <li id='${tasks.id}' class="list-group-item d-flex justify-content-between task-item">
+            <span class="${cssClass}">${tasks.text}</span>
+            <div class="task-item__buttons">
+                <button type="button" data-action="done" class="btn-action">
+                    <img src="./img/tick.svg" alt="Done" width="18" height="18">
+                </button>
+                <button type="button" data-action="delete" class="btn-action">
+                    <img src="./img/cross.svg" alt="Done" width="18" height="18">
+                </button>
+            </div>
+        </li>
+    `;
+
+    tasksList.insertAdjacentHTML('beforeend', taskHTML);
 }
